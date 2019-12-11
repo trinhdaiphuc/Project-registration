@@ -5,12 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron src/",
-    "build": "electron-packager . --platform linux --arch x64 --out dist/",
-    "deb64": "node build/deb64.js"
+    "start": "node index.js"
   },
   "keywords": [
-    "electron",
+    "express",
     "project_registration",
     "mysql",
     "store_procedure"
@@ -18,9 +16,18 @@
   "author": "Trinh Dai Phuc",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^7.1.3",
-    "electron-installer-debian": "^2.0.1",
-    "electron-packager": "^14.1.1",
-    "mysql": "^2.17.1"
+    "mysql": "^2.17.1",
+    "mysql2": "^2.0.2"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.4",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-handlebars": "^3.1.0",
+    "express-handlebars-paginate": "^1.0.3",
+    "express-session": "^1.17.0",
+    "hbs": "^4.0.6",
+    "morgan": "^1.9.1"
   }
 }
