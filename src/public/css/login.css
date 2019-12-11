@@ -1,38 +1,39 @@
-@import url(http://fonts.googleapis.com/css?family=Roboto:400);
+@import url("https://fonts.googleapis.com/css?family=Roboto&display=swap&subset=vietnamese");
+
 body {
-  background-color:#fff;
+  background-color: #fff;
   -webkit-font-smoothing: antialiased;
-  font: normal 14px Roboto,arial,sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
 
 .container {
-    padding: 25px;
-    position: fixed;
+  padding: 25px;
+  position: fixed;
 }
 
 .form-login {
-    background-color: #EDEDED;
-    padding-top: 10px;
-    padding-bottom: 20px;
-    padding-left: 20px;
-    padding-right: 20px;
-    border-radius: 15px;
-    border-color:#d2d2d2;
-    border-width: 5px;
-    box-shadow:0 1px 0 #cfcfcf;
+  background-color: #ededed;
+  padding-top: 10px;
+  padding-bottom: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  border-radius: 15px;
+  border-color: #d2d2d2;
+  border-width: 5px;
+  box-shadow: 0 1px 0 #cfcfcf;
 }
 
-h4 { 
- border:0 solid #fff; 
- border-bottom-width:1px;
- padding-bottom:10px;
- text-align: center;
+h4 {
+  border: 0 solid #fff;
+  border-bottom-width: 1px;
+  padding-bottom: 10px;
+  text-align: center;
 }
 
 .form-control {
-    border-radius: 10px;
+  border-radius: 10px;
 }
 
 .wrapper {
-    text-align: center;
+  text-align: center;
 }

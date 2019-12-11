@@ -1,23 +1,22 @@
-const { app, BrowserWindow, Menu } = require("electron");
+const { app, BrowserWindow, Menu, ipcMain } = require("electron");
 const path = require("path");
 const mysql = require("mysql");
-const config = require("./config/mysql.json");
+const config = require("./config/mysql.js");
 const connection = mysql.createConnection(config);
-const mainMenuTemplate =require("./renderer/menu.js")
+const mainMenuTemplate = require("./renderer/menu.js");
 
 let mainWindow;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    center: true,
-    width: 800,
-    height: 600,
     webPreferences: {
-      preload: path.join(__dirname, "main/preload.js"),
+      nodeIntegration: true,
+      // preload: path.join(__dirname, "./public/js/login.js")
     },
+    show: false
   });
 
-  connection.connect((err) => {
+  connection.connect(err => {
     if (err == null) {
       console.log("MySQL database connected.");
     } else {
@@ -25,17 +24,25 @@ function createWindow() {
     }
   });
 
-  mainWindow.loadFile("./public/view/index.html");
+  mainWindow.loadURL(path.join('file://', __dirname, './public/view/index.html'))
 
-  mainWindow.on("closed", function() {
-    mainWindow = null;
-  });
   mainWindow.maximize();
 
-  const mainMenu = Menu.buildFromTemplate(mainMenuTemplate)
+  mainWindow.show();
+
+  mainWindow.on("closed", function() {
+    app.quit();
+  });
+
+  const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
 
   Menu.setApplicationMenu(mainMenu);
 }
+
+// Catch Login
+ipcMain.on("login", (e, item) => {
+  console.log("[INFO}:::: item", item);
+});
 
 app.on("ready", createWindow);
 
@@ -54,3 +61,24 @@ app.on("activate", function() {
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) createWindow();
 });
+
+// If Mac, add empty object to menu
+if (process.platform == "darwin") {
+  mainMenuTemplate.unshift({});
+}
+
+if (process.env.NODE_ENV !== "production") {
+  mainMenuTemplate.push({
+    label: "Developer Tools",
+    submenu: [
+      {
+        label: "Toggle DevTools",
+        accelerator: process.platform == "darwin" ? "Command+I" : "Ctrl+I",
+        click(item, focusedWindow) {
+          focusedWindow.toggleDevTools();
+        }
+      },
+      { role: "reload" }
+    ]
+  });
+}
