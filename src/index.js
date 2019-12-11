@@ -1,8 +1,9 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, Menu } = require("electron");
 const path = require("path");
 const mysql = require("mysql");
 const config = require("./config/mysql.json");
 const connection = mysql.createConnection(config);
+const mainMenuTemplate =require("./renderer/menu.js")
 
 let mainWindow;
 
@@ -16,12 +17,24 @@ function createWindow() {
     },
   });
 
+  connection.connect((err) => {
+    if (err == null) {
+      console.log("MySQL database connected.");
+    } else {
+      console.log("[INFO]:::: createWindow -> err", err);
+    }
+  });
+
   mainWindow.loadFile("./public/view/index.html");
 
   mainWindow.on("closed", function() {
     mainWindow = null;
   });
   mainWindow.maximize();
+
+  const mainMenu = Menu.buildFromTemplate(mainMenuTemplate)
+
+  Menu.setApplicationMenu(mainMenu);
 }
 
 app.on("ready", createWindow);
@@ -30,7 +43,10 @@ app.on("ready", createWindow);
 app.on("window-all-closed", function() {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== "darwin") app.quit();
+  connection.end();
+  if (process.platform !== "darwin") {
+    app.quit();
+  }
 });
 
 app.on("activate", function() {
