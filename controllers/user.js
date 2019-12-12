@@ -8,13 +8,14 @@ module.exports = {
   login(req, res) {
     const username = req.body.username;
     const password = req.body.password;
-
-    connection = mysql.createConnection({
+    const config = {
       host: process.env.DB_HOST,
       user: username,
       password: password,
       database: process.env.DB_DATABASE,
-    });
+    };
+
+    connection = mysql.createConnection(config);
 
     connection.connect((err) => {
       if (err !== null) {
@@ -23,14 +24,18 @@ module.exports = {
     });
 
     req.session.username = username;
-    req.session.connectionConfig = connection.config;
-    console.log("[INFO]:::: login -> req.session.threadId", req.session.connectionConfig);
+    req.session.connectionConfig = config;
+
+    connection.end();
     res.redirect("/projects");
   },
   logout(req, res) {
-    if (connection !== null) {
-      connection.end();
-    }
-    res.redirect("/");
+    req.session.destroy((err) => {
+      if (err) {
+        console.error("[ERROR]::: Error when destroy session: ", err);
+      } else {
+        res.redirect("/");
+      }
+    });
   },
 };
