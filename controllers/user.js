@@ -1,8 +1,9 @@
 const mysql = require("mysql2");
-let connection = null;
 
 module.exports = {
   loginPage(req, res) {
+    res.locals.navLink =
+      '<a class="nav-link" href="/"><i class="fa fa-home"></i>&nbsp;&nbsp; HOMEPAGE</a>';
     res.render("login");
   },
   login(req, res) {
@@ -15,10 +16,10 @@ module.exports = {
       database: process.env.DB_DATABASE,
     };
 
-    connection = mysql.createConnection(config);
+    const connection = mysql.createConnection(config);
 
     connection.connect((err) => {
-      if (err !== null) {
+      if (err) {
         console.log("[INFO]:::: login -> err", err);
       }
     });

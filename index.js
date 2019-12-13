@@ -6,6 +6,16 @@ const app = express();
 const bodyParser = require("body-parser");
 const cookie = require("cookie-parser");
 const session = require("express-session");
+var Handlebars = require("handlebars");
+var MomentHandler = require("handlebars.moment");
+
+MomentHandler.registerHelpers(Handlebars);
+Handlebars.registerHelper("nav", function(message) {
+  var result = "";
+  if (message)
+    result = message;
+  return result;
+});
 
 const poolConnection = require("./models/index");
 const router = require("./routes");
@@ -55,8 +65,8 @@ app.use("/projects", router.project);
 
 app.listen(app.get("port"), () => {
   poolConnection.getConnection((err, connection) => {
-    if (err !== null) {
-      console.log("[INFO]:::: err", err);
+    if (err) {
+      console.error("[ERROR]:::: err", err);
     } else {
       console.log(`Database connected with threadId: ${connection.threadId}`);
     }
