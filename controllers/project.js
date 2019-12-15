@@ -53,7 +53,9 @@ module.exports = {
     const student_1 = req.body.student_1;
     const student_2 = req.body.student_2;
     const student_3 = req.body.student_3;
+    const group_name = req.body.group_name;
     const id = req.body.id;
+
     poolConnection.getConnection((err, connection) => {
       if (err) {
         console.error("[ERROR]:::: err", err);
@@ -61,7 +63,7 @@ module.exports = {
         console.log(`Database connected with threadId: ${connection.threadId}`);
         connection.query(
           "CALL sp_registerGroup(?,?,?,?,?)",
-          ["4", id, student_1, student_2, student_3],
+          [group_name, id, student_1, student_2, student_3],
           (error, results, fields) => {
             if (error) {
               return console.error(error);
