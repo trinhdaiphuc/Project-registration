@@ -8,9 +8,9 @@ Handlebars.registerHelper("nav", (message) => {
   return result;
 });
 
-Handlebars.registerHelper("slot", (_quantity, _remaining, _id) => {
+Handlebars.registerHelper("slot", (_remaining, _id) => {
   let result = "";
-  if (parseInt(_quantity) === parseInt(_remaining)) {
+  if (parseInt(_remaining) >= 0) {
     result = `<a class="btn btn-info btn-xs" href="/projects/${_id}">
     <span class="glyphicon glyphicon-edit"></span>Register</a>`;
   } else {

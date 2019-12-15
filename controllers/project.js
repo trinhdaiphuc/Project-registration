@@ -1,4 +1,5 @@
 const mysql = require("mysql2");
+const poolConnection = require("../models/index");
 let config = require("../config/mysql.js");
 delete config.connectionLimit;
 
@@ -53,7 +54,24 @@ module.exports = {
     const student_2 = req.body.student_2;
     const student_3 = req.body.student_3;
     const id = req.body.id;
-    console.log("[INFO]:::: registerProject -> body", { student_1, student_2, student_3 });
-    res.status(200).redirect(`/projects/${id}`);
+    poolConnection.getConnection((err, connection) => {
+      if (err) {
+        console.error("[ERROR]:::: err", err);
+      } else {
+        console.log(`Database connected with threadId: ${connection.threadId}`);
+        connection.query(
+          "CALL sp_registerGroup(?,?,?,?,?)",
+          ["4", id, student_1, student_2, student_3],
+          (error, results, fields) => {
+            if (error) {
+              return console.error(error);
+            }
+            console.log("[INFO]:::: registerProject -> results", results);
+            connection.release();
+            res.status(200).redirect(`/projects/${id}`);
+          },
+        );
+      }
+    });
   },
 };
