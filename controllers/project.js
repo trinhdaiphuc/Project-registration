@@ -40,7 +40,7 @@ module.exports = {
           if (error) {
             return console.error(error.message);
           }
-          res.locals.user = user;
+          res.locals.username = user.username;
           res.locals.project = results[0];
           res.render("register");
           connection.end();
