@@ -67,7 +67,6 @@ module.exports = {
           (error, results, fields) => {
             if (error) {
               return console.error(error);
-              
             }
             console.log("[INFO]:::: registerProject -> results", results);
             connection.release();
