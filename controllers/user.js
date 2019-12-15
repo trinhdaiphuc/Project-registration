@@ -1,4 +1,5 @@
 const mysql = require("mysql2");
+let config = require("../config/mysql.js");
 
 module.exports = {
   loginPage(req, res) {
@@ -9,23 +10,19 @@ module.exports = {
   login(req, res) {
     const username = req.body.username;
     const password = req.body.password;
-    const config = {
-      host: process.env.DB_HOST,
-      user: username,
-      password: password,
-      database: process.env.DB_DATABASE,
-    };
+    delete config.connectionLimit;
+    config.user = username;
+    config.password = password;
 
     const connection = mysql.createConnection(config);
 
     connection.connect((err) => {
       if (err) {
-        console.log("[INFO]:::: login -> err", err);
+        console.error("[ERROR]:::: login -> err", err);
       }
     });
 
-    req.session.username = username;
-    req.session.connectionConfig = config;
+    req.session.user = { username, password };
 
     connection.end();
     res.redirect("/projects");

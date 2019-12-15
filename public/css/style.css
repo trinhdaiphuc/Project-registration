@@ -70,3 +70,12 @@ footer {
   box-shadow: 3px 3px 0px transparent;
   transition: 0.5s;
 }
+
+.project-info {
+  margin: 30px 0;
+  box-shadow: 3px 3px 0px transparent;
+}
+
+.project-field {
+  margin: 20px;
+}

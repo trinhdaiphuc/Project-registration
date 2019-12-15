@@ -1,21 +1,14 @@
+require("dotenv").config();
+require("./controllers/helper").helper;
 const express = require("express");
+const app = express();
+const http = require("http");
 const expressHbs = require("express-handlebars");
 const paginate = require("express-handlebars-paginate");
 const morgan = require("morgan");
-const app = express();
 const bodyParser = require("body-parser");
 const cookie = require("cookie-parser");
 const session = require("express-session");
-var Handlebars = require("handlebars");
-var MomentHandler = require("handlebars.moment");
-
-MomentHandler.registerHelpers(Handlebars);
-Handlebars.registerHelper("nav", function(message) {
-  var result = "";
-  if (message)
-    result = message;
-  return result;
-});
 
 const poolConnection = require("./models/index");
 const router = require("./routes");
@@ -63,7 +56,10 @@ app.use(express.static(__dirname + "/public"));
 app.use("/", router.user);
 app.use("/projects", router.project);
 
-app.listen(app.get("port"), () => {
+const server = http.createServer(app);
+const io = require("socket.io")(server);
+
+server.listen(app.get("port"), () => {
   poolConnection.getConnection((err, connection) => {
     if (err) {
       console.error("[ERROR]:::: err", err);
@@ -72,6 +68,17 @@ app.listen(app.get("port"), () => {
     }
   });
   console.log(`Server is running on port ${app.get("port")}`);
+});
+
+io.on("connection", function(socket) {
+  console.log("a user connected");
+  socket.on("disconnect", function() {
+    console.log("user disconnected");
+  });
+
+  socket.on("message", (msg) => {
+    console.log("[INFO]:::: msg", msg);
+  });
 });
 
 app.get("*", (req, res) => res.send("Page Not found 404"));

@@ -1,0 +1,112 @@
+<div class="container-fluid">
+  <div class="container">
+    {{#each project}}
+    <div class="project-info">
+      <h4>Project information</h4>
+      <div class="project-field">
+
+        <div class="row">
+          <h5 class="col-md-3">Subject code:</h5>
+          <span class="col-md-9">{{_code}}</span>
+        </div>
+        <div class="row">
+          <h5 class="col-md-3">Subject name:</h5>
+          <span class="col-md-9">{{_subject_name}}</span>
+        </div>
+        <div class="row">
+          <h5 class="col-md-3">Lecturer:</h5>
+          <span class="col-md-9">{{_lecturer}}</span>
+        </div>
+        <div class="row">
+          <h5 class="col-md-3">Project name:</h5>
+          <span class="col-md-9">{{_name}}</span>
+        </div>
+        <div class="row">
+          <h5 class="col-md-3">Description:</h5>
+          <span class="col-md-9">{{_description}}</span>
+        </div>
+        <div class="row">
+          <h5 class="col-md-3">Slot:</h5>
+          <span class="col-md-9">{{_remaining}}/{{_quantity}}</span>
+        </div>
+      </div>
+    </div>
+
+    <form class="form-horizontal">
+      <fieldset>
+
+        <!-- Form Name -->
+        <h4>Register form:</h4>
+        <div class="project-field">
+          <!-- Text input-->
+          <div class="form-group">
+            <div class="row">
+              <label class="col-md-3 control-label" for="group_name">Group name:</label>
+              <div class="col-md-5">
+                <input id="group_name" name="group_name" type="text" placeholder=""
+                  class="form-control input-md" required="">
+              </div>
+            </div>
+          </div>
+
+          <!-- Text input-->
+          <div class="form-group">
+            <div class="row">
+              <label class="col-md-3 control-label" for="student_2">Student 2:</label>
+              <div class="col-md-5">
+                <input id="student_1" name="student_2" type="text" placeholder=""
+                  class="form-control input-md" required="">
+              </div>
+            </div>
+          </div>
+
+          <!-- Text input-->
+          <div class="form-group">
+            <div class="row">
+              <label class="col-md-3 control-label" for="Student_2">Student 3:</label>
+              <div class="col-md-5">
+                <input id="student_2" name="Student_2" type="text" placeholder=""
+                  class="form-control input-md" required="">
+              </div>
+            </div>
+          </div>
+
+          <!-- Button -->
+          <div class="form-group">
+            <div class="row">
+              <label class="col-md-3 control-label" for="submit_register"></label>
+              <div class="col-md-3">
+                <button id="submit_register" name="submit_register" type="submit"
+                  class="btn btn-primary">Submit</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </fieldset>
+    </form>
+    {{/each}}
+  </div>
+</div>
+
+<script>
+  const project = {{{ json project }}}
+  const user = {{{ json user }}}
+  $("form").submit((e) => {
+    event.preventDefault(e);
+    const id = project[0]._id;
+    $.post(`/projects/${id}`, {
+      id: id,
+      group_name: $("#group_name").val(),
+      student_1: user.username,
+      student_2: $("#student_1").val(),
+      student_3: $("#student_2").val(),
+    },
+      (data, status) => {
+        if (status == "success") {
+          // alert(`You register successfully.`);
+          $("body").html(data);
+        }
+      })
+  })
+</script>
