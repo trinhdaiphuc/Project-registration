@@ -1,36 +1,63 @@
 <div class="container-fluid">
   <div class="container">
-    {{#each project}}
+    {{#with project}}
+
     <div class="project-info">
+
       <h4>Project information</h4>
       <div class="project-field">
 
         <div class="row">
-          <h5 class="col-md-3">Subject code:</h5>
-          <span class="col-md-9">{{_code}}</span>
+          <h5 class="col-md-4">Subject code:</h5>
+          <span class="col-md-8">{{_code}}</span>
         </div>
         <div class="row">
-          <h5 class="col-md-3">Subject name:</h5>
-          <span class="col-md-9">{{_subject_name}}</span>
+          <h5 class="col-md-4">Subject name:</h5>
+          <span class="col-md-8">{{_subject_name}}</span>
         </div>
         <div class="row">
-          <h5 class="col-md-3">Lecturer:</h5>
-          <span class="col-md-9">{{_lecturer}}</span>
+          <h5 class="col-md-4">Lecturer:</h5>
+          <span class="col-md-8">{{_lecturer}}</span>
         </div>
         <div class="row">
-          <h5 class="col-md-3">Project name:</h5>
-          <span class="col-md-9">{{_name}}</span>
+          <h5 class="col-md-4">Project name:</h5>
+          <span class="col-md-8">{{_name}}</span>
         </div>
         <div class="row">
-          <h5 class="col-md-3">Description:</h5>
-          <span class="col-md-9">{{_description}}</span>
+          <h5 class="col-md-4">Description:</h5>
+          <span class="col-md-8">{{_description}}</span>
         </div>
         <div class="row">
-          <h5 class="col-md-3">Slot:</h5>
-          <span class="col-md-9">{{_remaining}}/{{_quantity}}</span>
+          <h5 class="col-md-4">Slot:</h5>
+          <span class="col-md-8">{{_remaining}}/{{_quantity}}</span>
         </div>
       </div>
     </div>
+    {{#if teamInfo}}
+    <div class="project-info">
+      <h4>Your team</h4>
+
+      <div class="project-field">
+        <div class="row">
+          <h5 class="col-md-3">Name: </h5>
+          <span class="col-md-9">{{teamInfo.group_name}}</span>
+          <h5 class="col-md-3">Student 1: </h5>
+          <span class="col-md-9">{{teamInfo.student_1}}</span>
+          <h5 class="col-md-3">Student 2: </h5>
+          <span class="col-md-9">{{teamInfo.student_2}}</span>
+          <h5 class="col-md-3">Student 3: </h5>
+          <span class="col-md-9">{{teamInfo.student_3}}</span>
+        </div>
+      </div>
+      <form action="/projects/{{_id}}?_method=DELETE" method="POST">
+        <input hidden name="studentId" value="{{username}}">
+        <input hidden name="_method" value="DELETE">
+        <input hidden name="groupId" value="{{teamInfo.group_id}}">
+        <button class="btn btn-danger" type="submit">Delete team</button>
+      </form>
+    </div>
+
+    {{else}}
 
     <form class="form-horizontal" action="/projects/{{_id}}" method="POST">
       <fieldset>
@@ -48,9 +75,6 @@
               </div>
             </div>
           </div>
-
-          <input hidden id="student_1" name="student_1" value="{{username}}">
-          <input hidden  name="id" value="{{_id}}">
 
           <!-- Text input-->
           <div class="form-group">
@@ -88,6 +112,8 @@
 
       </fieldset>
     </form>
-    {{/each}}
+    {{/if}}
+
+    {{/with}}
   </div>
 </div>

@@ -79,3 +79,7 @@ footer {
 .project-field {
   margin: 20px;
 }
+
+td > a {
+  width: 120px;
+}

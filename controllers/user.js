@@ -5,7 +5,7 @@ module.exports = {
   loginPage(req, res) {
     res.locals.navLink =
       '<a class="nav-link" href="/"><i class="fa fa-home"></i>&nbsp;&nbsp; HOMEPAGE</a>';
-    res.render("login");
+    res.render("login", { message: req.flash("loginMessage") });
   },
   login(req, res) {
     const username = req.body.username;
@@ -18,14 +18,19 @@ module.exports = {
 
     connection.connect((err) => {
       if (err) {
-        console.error("[ERROR]:::: login -> err", err);
+        if (err.code == "ER_ACCESS_DENIED_ERROR") {
+          console.error("[ERROR]:::: login -> err", err);
+          req.flash("loginMessage", "Wrong username or password");
+          res.status(401).redirect("/");
+        } else {
+          req.flash("loginMessage", "Internal server error");
+          res.status(500).redirect("/");
+        }
+      } else {
+        req.session.user = { username, password };
+        res.redirect("/projects");
       }
     });
-
-    req.session.user = { username, password };
-
-    connection.end();
-    res.redirect("/projects");
   },
   logout(req, res) {
     req.session.destroy((err) => {

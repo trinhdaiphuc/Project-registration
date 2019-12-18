@@ -5,6 +5,8 @@
         <div class="card">
           <div class="card-header">USER LOGIN</div>
           <div class="card-body">
+            {{#LoginMessage message}}
+            {{/LoginMessage}}
             <form action="/login" method="post" accept-charset="UTF-8">
               <div class="form-group row">
                 <label for="username"
@@ -36,11 +38,3 @@
     </div>
   </div>
 </main>
-
-<script src="/socket.io/socket.io.js"></script>
-<script>
-  $(function () {
-    var socket = io();
-    socket.emit('message', "Hello");
-  });
-</script>
