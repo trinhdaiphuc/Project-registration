@@ -24,7 +24,7 @@ Handlebars.registerHelper("json", (obj) => {
   return JSON.stringify(obj);
 });
 
-Handlebars.registerHelper("LoginMessage", (message) => {
+Handlebars.registerHelper("ErrorMessage", (message) => {
   var result = "";
   if (message != "") {
     result =
