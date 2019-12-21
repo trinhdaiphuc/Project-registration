@@ -50,7 +50,7 @@ app.use(
 
 app.set("port", process.env.NODE_PORT || 3000);
 
-app.use(express.static(__dirname + "/public"));
+app.use("/public", express.static(__dirname + "/public"));
 
 app.use("/", router.user);
 app.use("/projects", router.project);
