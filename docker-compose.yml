@@ -1,0 +1,12 @@
+version: "3"
+services:
+  hqt_app:
+    build:
+      context: .
+    ports:
+      - ${NODE_PORT}:${NODE_PORT}
+    restart: always
+    entrypoint: ["npm", "start"]
+    volumes:
+      - ./src:/app/src
+      - .env:/app/.env
