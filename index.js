@@ -48,7 +48,7 @@ app.use(
   }),
 );
 
-app.set("port", process.env.NODE_PORT || 3000);
+app.set("port", process.env.PORT || 3000);
 
 app.use("/public", express.static(__dirname + "/public"));
 
