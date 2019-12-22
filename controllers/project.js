@@ -38,12 +38,13 @@ module.exports = {
         console.error(`[ERROR]::: error when connect to user ${req.session.username}, ${err}`);
       } else {
         connection.query("CALL sp_infoAProject(?)", [id], (error, results) => {
-        console.log("[INFO]:::: registerPage -> error", error);
-        console.log("[INFO]:::: registerPage -> results", results);
-          if (results[0] && results[0][0].error) {
+          if (error) {
+            req.flash("projectError", error.message);
+            res.redirect("/projects");
+          } else if (results[0] && results[0][0].error) {
             console.error("[ERROR]::: ", results[0][0].error);
             req.flash("projectError", results[0][0].error);
-            res.redirect("/projects", { message: req.flash("projectError") });
+            res.redirect("/projects");
           } else {
             res.locals.project = results[0][0];
             res.locals.project.username = user.username;
@@ -51,7 +52,10 @@ module.exports = {
               "CALL sp_infoGroupInProject(?,?)",
               [id, user.username],
               (error, results) => {
-                if (results[0][0].error) {
+                if (error) {
+                  req.flash("projectError", error.message);
+                  res.redirect("/projects");
+                } else if (results[0][0].error) {
                   console.error("[ERROR]::: ", results[0][0].error);
                 } else {
                   const teamInfo = {
@@ -93,7 +97,7 @@ module.exports = {
               req.flash("registerError", results[0][0].error);
             }
             connection.release();
-            res.status(200).redirect(`/projects/${id}`);
+            res.redirect(`/projects/${id}`);
           },
         );
       }
@@ -115,7 +119,7 @@ module.exports = {
             req.flash("registerError", results[0][0].error);
           } else {
             connection.release();
-            res.status(200).redirect(`/projects/${id}`);
+            res.redirect(`/projects/${id}`);
           }
         });
       }
