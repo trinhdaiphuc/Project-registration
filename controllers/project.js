@@ -38,7 +38,9 @@ module.exports = {
         console.error(`[ERROR]::: error when connect to user ${req.session.username}, ${err}`);
       } else {
         connection.query("CALL sp_infoAProject(?)", [id], (error, results) => {
-          if (results[0][0].error) {
+        console.log("[INFO]:::: registerPage -> error", error);
+        console.log("[INFO]:::: registerPage -> results", results);
+          if (results[0] && results[0][0].error) {
             console.error("[ERROR]::: ", results[0][0].error);
             req.flash("projectError", results[0][0].error);
             res.redirect("/projects", { message: req.flash("projectError") });
