@@ -14,6 +14,8 @@ module.exports = {
     connection.connect((err) => {
       if (err) {
         console.error(`[ERROR]::: error when connect to user ${req.session.username}, ${err}`);
+        req.flash("projectError", error.message);
+        res.render("project", { message: req.flash("projectError") });
       } else {
         connection.query("CALL sp_infoProject", (error, results) => {
           if (results[0][0].error) {
@@ -36,6 +38,8 @@ module.exports = {
     connection.connect((err) => {
       if (err) {
         console.error(`[ERROR]::: error when connect to user ${req.session.username}, ${err}`);
+        req.flash("projectError", error.message);
+        res.redirect("/projects");
       } else {
         connection.query("CALL sp_infoAProject(?)", [id], (error, results) => {
           if (error) {
@@ -55,7 +59,7 @@ module.exports = {
               (error, results) => {
                 if (error) {
                   console.log("[INFO]:::: registerPage sp_infoGroupInProject -> error", error);
-                  req.flash("projectError", error.message);
+                  req.flash("registerError", error.message);
                   res.redirect(`/projects/${id}`);
                   return;
                 } else if (results[0][0].error) {
@@ -131,9 +135,9 @@ module.exports = {
             req.flash("registerError", results[0][0].error);
           } else {
             connection.release();
-            console.log("[INFO]::: delete success")
-            res.redirect(`/projects/${id}`);
+            console.log("[INFO]::: delete success");
           }
+          res.redirect(`/projects/${id}`);
         });
       }
     });
