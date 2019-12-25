@@ -53,7 +53,6 @@ module.exports = {
               "[INFO]:::: registerPage sp_infoAProject -> error",
               error
             );
-            req.flash("projectError", error.message);
             res.redirect("/projects");
           } else if (results[0] && results[0][0].error) {
             console.error("[ERROR]::: ", results[0][0].error);
