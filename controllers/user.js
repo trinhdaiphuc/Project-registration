@@ -21,10 +21,10 @@ module.exports = {
         if (err.code == "ER_ACCESS_DENIED_ERROR") {
           console.error("[ERROR]:::: login -> err", err);
           req.flash("loginMessage", "Wrong username or password");
-          res.status(401).redirect("/");
+          res.redirect("/");
         } else {
           req.flash("loginMessage", "Internal server error");
-          res.status(500).redirect("/");
+          res.redirect("/");
         }
       } else {
         req.session.user = { username, password };

@@ -39,6 +39,7 @@ module.exports = {
       } else {
         connection.query("CALL sp_infoAProject(?)", [id], (error, results) => {
           if (error) {
+            console.log("[INFO]:::: registerPage sp_infoAProject -> error", error);
             req.flash("projectError", error.message);
             res.redirect("/projects");
           } else if (results[0] && results[0][0].error) {
@@ -53,8 +54,10 @@ module.exports = {
               [id, user.username],
               (error, results) => {
                 if (error) {
+                  console.log("[INFO]:::: registerPage sp_infoGroupInProject -> error", error);
                   req.flash("projectError", error.message);
-                  res.redirect("/projects");
+                  res.redirect(`/projects/${id}`);
+                  return;
                 } else if (results[0][0].error) {
                   console.error("[ERROR]::: ", results[0][0].error);
                 } else {
@@ -86,14 +89,21 @@ module.exports = {
 
     poolConnection.getConnection((err, connection) => {
       if (err) {
-        console.error("[ERROR]::: ", err);
+        console.error("[ERROR]:::: registerProject -> err", err);
+        req.flash("projectError", error.message);
+        res.redirect("/projects");
       } else {
         connection.query(
           "CALL sp_registerGroup(?,?,?,?,?)",
           [group_name, id, student_1, student_2, student_3],
           (error, results) => {
+            console.log(
+              "[INFO]:::: registerProject -> [group_name, id, student_1, student_2, student_3]",
+              [group_name, id, student_1, student_2, student_3],
+            );
+
             if (results[0][0].error) {
-              console.error("[ERROR]::: ", results[0][0].error);
+              console.error("[ERROR]::: result ", results[0][0].error);
               req.flash("registerError", results[0][0].error);
             }
             connection.release();
@@ -105,20 +115,23 @@ module.exports = {
   },
   deleteProject(req, res) {
     res.locals.navLink = '<a class="btn btn-primary" href="/logout"></i>&nbsp;&nbsp; LOGOUT</a>';
-    const studentId = req.body.studentId;
     const groupId = req.body.groupId;
     const id = req.params.id;
+    console.log("[INFO]:::: deleteProject -> id", id);
 
     poolConnection.getConnection((err, connection) => {
       if (err) {
-        console.error("[ERROR]::: ", err);
+        console.error("[ERROR]::: deleteProject ", err);
+        req.flash("projectError", error.message);
+        res.redirect("/projects");
       } else {
         connection.query("CALL sp_deleteGroupInProject(?,?)", [groupId, id], (error, results) => {
           if (results[0][0].error) {
-            console.error("[ERROR]::: ", results[0][0].error);
+            console.error("[ERROR]::: sp_deleteGroupInProject ", results[0][0].error);
             req.flash("registerError", results[0][0].error);
           } else {
             connection.release();
+            console.log("[INFO]::: delete success")
             res.redirect(`/projects/${id}`);
           }
         });
