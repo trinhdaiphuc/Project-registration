@@ -130,8 +130,11 @@ module.exports = {
         connection.query("CALL sp_deleteGroupInProject(?,?)", [groupId, id], (error, results) => {
           if (results[0] && results[0][0].error) {
             console.error("[ERROR]::: sp_deleteGroupInProject ", results[0][0].error);
+            req.flash("registerError", results[0][0].error);
           } else {
             connection.release();
+            req.flash("registerError", results[0][0].success);
+            console.log("[INFO}:::: deleteProject -> results[0][0].success", results[0][0].success)
           }
           res.redirect(`/projects/${id}`);
         });
